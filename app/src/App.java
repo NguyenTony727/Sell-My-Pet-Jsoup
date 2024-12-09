@@ -15,7 +15,13 @@ public class App {
         String url = "https://www.amazon.com/Orange-Mushroom-Lamp-Dimmable-Mid-Century/dp/B0CP6VVKMH?source=ps-sl-shoppingads-lpcontext&ref_=fplfs&smid=A2REG95GY1M7ED&th=1";
 
         Document doc = Jsoup.connect(url).get();
+
         Elements reviewElements = doc.select(".review");
+        
+        if (reviewElements.isEmpty()) {
+            System.out.println("No reviews found with the current selector. Please inspect the page.");
+        }
+
 
         for (Element reviewElement : reviewElements) {
 
@@ -29,6 +35,7 @@ public class App {
             }
 
         for (Review review : reviews) {
+            System.out.println("Printing Reviews:");
             System.out.println(review.getTitle());
             System.out.println(review.getText());
             System.out.println("\n");
@@ -52,7 +59,5 @@ public class App {
         public String getText() {
             return text;
         }
-
     }
-
 }
