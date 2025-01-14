@@ -7,35 +7,33 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class App {
-
     public static void main(String[] args) throws IOException {
 
         List<Review> reviews = new ArrayList<>();
-   
         String url = "https://www.amazon.com/Orange-Mushroom-Lamp-Dimmable-Mid-Century/dp/B0CP6VVKMH?source=ps-sl-shoppingads-lpcontext&ref_=fplfs&smid=A2REG95GY1M7ED&th=1";
 
-        Document doc = Jsoup.connect(url).get();
+        while (true) {
 
-        Elements reviewElements = doc.select(".review");
-        
-        if (reviewElements.isEmpty()) {
-            System.out.println("No reviews found with the current selector. Please inspect the page.");
-        }
+            Document doc = Jsoup.connect(url).get();
+            Elements reviewElements = doc.select(".review");
+            if (reviewElements == null || reviewElements.isEmpty()) {
+                break;
+            }
 
+            for (Element reviewElement : reviewElements) {
 
-        for (Element reviewElement : reviewElements) {
+                Element titleElement = reviewElement.select(".review-title").first();
+                String title = titleElement.text();
 
-            Element titleElement = reviewElement.select(".review-title").first();
-            String title = titleElement.text();
-
-            Element textElement = reviewElement.select(".review-text").first();
-            String text = textElement.text();
+                Element textElement = reviewElement.select(".review-text").first();
+                String text = textElement.text();
 
                 reviews.add(new Review(title, text));
             }
 
+        }
+
         for (Review review : reviews) {
-            System.out.println("Printing Reviews:");
             System.out.println(review.getTitle());
             System.out.println(review.getText());
             System.out.println("\n");
@@ -59,5 +57,7 @@ public class App {
         public String getText() {
             return text;
         }
+
     }
+
 }
